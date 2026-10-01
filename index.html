@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduQuest SMA - Game Edukasi Interaktif</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap logo-icon"></i>
+            <span>EduQuest <span class="highlight">SMA</span></span>
+        </div>
+        <div class="nav-controls">
+            <button id="theme-toggle" class="icon-btn" title="Ganti Tema">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <button id="sound-toggle" class="icon-btn" title="Efek Suara">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+            <a href="https://github.com" target="_blank" class="github-btn" title="GitHub Repository">
+                <i class="fa-brands fa-github"></i> GitHub
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Dashboard / Main Menu -->
+        <section id="menu-screen" class="screen active">
+            <div class="hero">
+                <span class="badge">🚀 Platform Belajar Interaktif</span>
+                <h1>Asah Otak & Kuasai Pelajaran SMA</h1>
+                <p>Pilih mata pelajaran, tantang kemampuanmu melalui Kuis Kilat atau Teka-Teki Pasangan!</p>
+            </div>
+
+            <!-- Subject Selection -->
+            <h2 class="section-title"><i class="fa-solid fa-book-open"></i> Pilih Mata Pelajaran</h2>
+            <div class="subject-grid">
+                <div class="subject-card" data-subject="matematika">
+                    <div class="card-icon math"><i class="fa-solid fa-calculator"></i></div>
+                    <h3>Matematika</h3>
+                    <p>Aljabar, Logaritma, Kalkulus, & Geometri</p>
+                    <span class="tag">10 Soal & Pasangan</span>
+                </div>
+                <div class="subject-card" data-subject="fisika">
+                    <div class="card-icon physics"><i class="fa-solid fa-atom"></i></div>
+                    <h3>Fisika</h3>
+                    <p>Mekanika, Gelombang, Optik, & Listrik</p>
+                    <span class="tag">10 Soal & Pasangan</span>
+                </div>
+                <div class="subject-card" data-subject="kimia">
+                    <div class="card-icon chemistry"><i class="fa-solid fa-flask"></i></div>
+                    <h3>Kimia</h3>
+                    <p>Tabel Periodik, Reaksi, & Stoikiometri</p>
+                    <span class="tag">10 Soal & Pasangan</span>
+                </div>
+                <div class="subject-card" data-subject="biologi">
+                    <div class="card-icon biology"><i class="fa-solid fa-dna"></i></div>
+                    <h3>Biologi</h3>
+                    <p>Genetika, Sel, Ekologi, & Anatomi</p>
+                    <span class="tag">10 Soal & Pasangan</span>
+                </div>
+                <div class="subject-card" data-subject="sejarah">
+                    <div class="card-icon history"><i class="fa-solid fa-landmark"></i></div>
+                    <h3>Sejarah</h3>
+                    <p>Kerajaan Nusantara & Kemerdekaan</p>
+                    <span class="tag">10 Soal & Pasangan</span>
+                </div>
+            </div>
+
+            <!-- Game Mode Selector Modal/Section -->
+            <div id="mode-modal" class="modal hidden">
+                <div class="modal-content">
+                    <button class="close-btn" id="close-mode-modal">&times;</button>
+                    <h2>Pilih Mode Permainan</h2>
+                    <p id="selected-subject-name">Mata Pelajaran: <strong>Matematika</strong></p>
+
+                    <div class="mode-options">
+                        <button class="mode-btn" data-mode="quiz">
+                            <div class="mode-icon"><i class="fa-solid fa-bolt"></i></div>
+                            <div class="mode-info">
+                                <h3>Kuis Kilat</h3>
+                                <p>Pilihan ganda dengan waktu terbatas & streak combo!</p>
+                            </div>
+                        </button>
+                        <button class="mode-btn" data-mode="matching">
+                            <div class="mode-icon"><i class="fa-solid fa-puzzle-piece"></i></div>
+                            <div class="mode-info">
+                                <h3>Teka-Teki Pasangan</h3>
+                                <p>Jodohkan istilah dengan definisi yang tepat!</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Screen -->
+        <section id="quiz-screen" class="screen">
+            <div class="game-header">
+                <button class="back-btn" id="quiz-back"><i class="fa-solid fa-arrow-left"></i> Keluar</button>
+                <div class="game-stats">
+                    <div class="stat-box">
+                        <i class="fa-solid fa-star"></i> Skor: <span id="quiz-score">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fa-solid fa-fire"></i> Combo: <span id="quiz-streak">x1</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fa-solid fa-clock"></i> <span id="quiz-timer">15</span>s
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="quiz-progress"></div>
+            </div>
+
+            <div class="quiz-card">
+                <div class="question-meta">
+                    <span id="quiz-subject-tag" class="subject-badge">Matematika</span>
+                    <span id="quiz-number">Soal 1/5</span>
+                </div>
+                <h2 id="quiz-question">Pertanyaan kuis akan tampil di sini?</h2>
+
+                <div class="options-grid" id="options-container">
+                    <!-- Dynamic Options -->
+                </div>
+
+                <div id="explanation-box" class="explanation hidden">
+                    <h4><i class="fa-solid fa-lightbulb"></i> Pembahasan:</h4>
+                    <p id="explanation-text"></p>
+                    <button id="next-question-btn" class="btn primary-btn">Soal Selanjutnya <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Matching Game Screen -->
+        <section id="matching-screen" class="screen">
+            <div class="game-header">
+                <button class="back-btn" id="matching-back"><i class="fa-solid fa-arrow-left"></i> Keluar</button>
+                <div class="game-stats">
+                    <div class="stat-box">
+                        <i class="fa-solid fa-check"></i> Terpasang: <span id="matching-pairs-count">0/5</span>
+                    </div>
+                    <div class="stat-box">
+                        <i class="fa-solid fa-bullseye"></i> Percobaan: <span id="matching-attempts">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="matching-instructions">
+                <p><i class="fa-solid fa-hand-pointer"></i> Klik satu kartu <strong>Istilah</strong> (Kiri) dan satu kartu <strong>Definisi</strong> (Kanan) untuk menjodohkan!</p>
+            </div>
+
+            <div class="matching-container">
+                <div class="matching-column" id="terms-column">
+                    <h3>Istilah / Konsep</h3>
+                    <div class="cards-grid" id="terms-grid"></div>
+                </div>
+                <div class="matching-column" id="definitions-column">
+                    <h3>Definisi / Penjelasan</h3>
+                    <div class="cards-grid" id="definitions-grid"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Screen -->
+        <section id="result-screen" class="screen">
+            <div class="result-card">
+                <div class="trophy-icon">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2>Selesai! Kerja Bagus!</h2>
+                <p id="result-message">Kamu menyelesaikan tantangan dengan baik.</p>
+
+                <div class="result-stats">
+                    <div class="res-stat-item">
+                        <span class="label">Total Skor</span>
+                        <span class="value" id="res-score">0</span>
+                    </div>
+                    <div class="res-stat-item">
+                        <span class="label">Akurasi Jawaban</span>
+                        <span class="value" id="res-accuracy">0%</span>
+                    </div>
+                    <div class="res-stat-item">
+                        <span class="label">Peringkat</span>
+                        <span class="value" id="res-rank">Pemula</span>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="retry-btn" class="btn primary-btn"><i class="fa-solid fa-rotate-right"></i> Coba Lagi</button>
+                    <button id="home-btn" class="btn secondary-btn"><i class="fa-solid fa-house"></i> Menu Utama</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 EduQuest SMA - Dibuat untuk Game Edukasi Interaktif Open Source GitHub</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
